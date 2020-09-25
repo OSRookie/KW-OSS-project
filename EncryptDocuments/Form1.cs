@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.IO;
 
 namespace EncryptDocuments
 {
@@ -15,6 +16,26 @@ namespace EncryptDocuments
         public Form1()
         {
             InitializeComponent();
+            CheckForIllegalCrossThreadCalls = false;
         }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            
+        }
+
+        //암호화,복호화 파일 선택
+        private void btn_open_Click(object sender, EventArgs e)
+        {
+            if (ofd_Menu.ShowDialog() == DialogResult.OK)
+            {
+                txt_file.Text = ofd_Menu.FileName;
+                FileInfo fileInfo = new FileInfo(txt_file.Text);
+                
+            }
+        }
+
+        
+
     }
 }

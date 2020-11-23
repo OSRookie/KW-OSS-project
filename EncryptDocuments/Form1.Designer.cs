@@ -86,9 +86,9 @@
             this.label4.ForeColor = System.Drawing.Color.Red;
             this.label4.Location = new System.Drawing.Point(117, 85);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(182, 12);
+            this.label4.Size = new System.Drawing.Size(176, 12);
             this.label4.TabIndex = 7;
-            this.label4.Text = "(비밀번호는 6 자리 이상이어야합니다.)";
+            this.label4.Text = "(비밀번호는 6~8 자리 이어야합니다.)";
             // 
             // txt_password
             // 

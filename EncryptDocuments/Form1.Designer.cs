@@ -71,6 +71,7 @@
             this.chk_password.TabIndex = 8;
             this.chk_password.Text = "비밀번호 표시";
             this.chk_password.UseVisualStyleBackColor = true;
+            this.chk_password.CheckedChanged += new System.EventHandler(this.chk_password_CheckedChanged);
             // 
             // progressBar1
             // 
@@ -149,6 +150,7 @@
             this.btn_enc.TabIndex = 1;
             this.btn_enc.Text = "암호화";
             this.btn_enc.UseVisualStyleBackColor = true;
+            this.btn_enc.Click += new System.EventHandler(this.btn_enc_Click);
             // 
             // btn_dec
             // 
@@ -158,6 +160,7 @@
             this.btn_dec.TabIndex = 2;
             this.btn_dec.Text = "복호화";
             this.btn_dec.UseVisualStyleBackColor = true;
+            this.btn_dec.Click += new System.EventHandler(this.btn_dec_Click);
             // 
             // ofd_Menu
             // 

@@ -164,7 +164,7 @@
             // 
             // ofd_Menu
             // 
-            this.ofd_Menu.FileName = "openFileDialog1";
+            this.ofd_Menu.FileName = "ofd_Menu";
             // 
             // Form1
             // 

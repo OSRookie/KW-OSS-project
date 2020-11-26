@@ -46,8 +46,8 @@ namespace EncryptDocuments
             if (ofd_Menu.ShowDialog() == DialogResult.OK)
             {
                 txt_file.Text = ofd_Menu.FileName;
-                FileInfo fileInfo = new FileInfo(txt_file.Text);
-                if (fileInfo.Extension.ToLower() == ".fe")
+                FileInfo FInfo = new FileInfo(txt_file.Text);
+                if (FInfo.Extension.ToLower() == ".fe")
                 {
                     btn_enc.Enabled = false;
                     btn_dec.Enabled = true;
@@ -59,6 +59,7 @@ namespace EncryptDocuments
                 }
             }
         }
+
         //바로 가기 메뉴
         public static void FileMenu(string strPath, string strName)
         {
@@ -124,8 +125,21 @@ namespace EncryptDocuments
         //파일 복호화
         private void btn_dec_Click(object sender, EventArgs e)
         {
-
+            if (txt_file.Text != "")
+            {
+                if (txt_password.Text.Length < 6)
+                    MessageBox.Show("비밀번호는 6 자리 이상이어야합니다！", "경고", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                if (txt_password.Text.Length > 8)
+                    MessageBox.Show("비밀번호는 8 자리를 초과 할 수 없습니다！", "경고", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                else
+                {
+                    EDncrypt myEDncrypt = new EDncrypt(txt_file.Text, txt_password.Text, progressBar1);
+                    myEDncrypt.StartDncrypt();
+                    progressBar1.Value = 0;
+                }
+            }
         }
+
         
     }
 
@@ -149,58 +163,131 @@ namespace EncryptDocuments
         //파일 암호화
         private void myEThread()
         {
-            byte[] btRKey = new byte[0];
-            int pwdLength = strPwd.Length;
-            if (pwdLength == 6)
+            FileStream FStream = null;
+            FileStream NewFStream = null;
+            DES myDES = null;
+            CryptoStream CStream = null;
+            try
             {
-                btRKey = new byte[] { (byte)strPwd[0], (byte)strPwd[1], (byte)strPwd[2], (byte)strPwd[3], (byte)strPwd[4], (byte)strPwd[5], (byte)strPwd[0], (byte)strPwd[1] };
-            }
-            if (pwdLength == 7)
-            {
-                btRKey = new byte[] { (byte)strPwd[0], (byte)strPwd[1], (byte)strPwd[2], (byte)strPwd[3], (byte)strPwd[4], (byte)strPwd[5], (byte)strPwd[6], (byte)strPwd[0] };
-            }
-            if (pwdLength == 8)
-            {
-                btRKey = new byte[] { (byte)strPwd[0], (byte)strPwd[1], (byte)strPwd[2], (byte)strPwd[3], (byte)strPwd[4], (byte)strPwd[5], (byte)strPwd[6], (byte)strPwd[7] };
-            }
-            FileStream FStream = new FileStream(strFile, FileMode.Open, FileAccess.Read);
-            FileStream NewFStream = new FileStream(strFile + ".fe", FileMode.OpenOrCreate, FileAccess.Write);
-            NewFStream.SetLength((long)0);
-            byte[] buffer = new byte[0x400];
-            int MinNum = 0;
-            long length = FStream.Length;
-            int MaxNum = (int)(length / ((long)0x400));
-            PBar.Maximum = MaxNum;
-            DES myDES = new DESCryptoServiceProvider();
-            CryptoStream CStream = new CryptoStream(NewFStream, myDES.CreateEncryptor(btRKey, btRKey), CryptoStreamMode.Write);
-            while (MinNum < length)
-            {
-                int count = FStream.Read(buffer, 0, 0x400);
-                CStream.Write(buffer, 0, count);
-                MinNum += count;
                 try
                 {
-                    if (PBar.Value < PBar.Maximum)
+                    byte[] btRKey = new byte[0];
+                    int pwdLength = strPwd.Length;
+                    if (pwdLength == 6)
                     {
-                        PBar.Value++;
+                        btRKey = new byte[] { (byte)strPwd[0], (byte)strPwd[1], (byte)strPwd[2], (byte)strPwd[3], (byte)strPwd[4], (byte)strPwd[5], (byte)strPwd[0], (byte)strPwd[1] };
                     }
+                    if (pwdLength == 7)
+                    {
+                        btRKey = new byte[] { (byte)strPwd[0], (byte)strPwd[1], (byte)strPwd[2], (byte)strPwd[3], (byte)strPwd[4], (byte)strPwd[5], (byte)strPwd[6], (byte)strPwd[0] };
+                    }
+                    if (pwdLength == 8)
+                    {
+                        btRKey = new byte[] { (byte)strPwd[0], (byte)strPwd[1], (byte)strPwd[2], (byte)strPwd[3], (byte)strPwd[4], (byte)strPwd[5], (byte)strPwd[6], (byte)strPwd[7] };
+                    }
+                    FStream = new FileStream(strFile, FileMode.Open, FileAccess.Read);
+                    NewFStream = new FileStream(strFile + ".fe", FileMode.OpenOrCreate, FileAccess.Write);
+                    NewFStream.SetLength((long)0);
+                    byte[] buffer = new byte[0x400];
+                    int MinNum = 0;
+                    long length = FStream.Length;
+                    int MaxNum = (int)(length / ((long)0x400));
+                    PBar.Maximum = MaxNum;
+                    myDES = new DESCryptoServiceProvider();
+                    CStream = new CryptoStream(NewFStream, myDES.CreateEncryptor(btRKey, btRKey), CryptoStreamMode.Write);
+                    while (MinNum < length)
+                    {
+                        int count = FStream.Read(buffer, 0, 0x400);
+                        CStream.Write(buffer, 0, count);
+                        MinNum += count;
+                        try
+                        {
+                            if (PBar.Value < PBar.Maximum)
+                            {
+                                PBar.Value++;
+                            }
+                        }
+                        catch
+                        {
+                        }
+                    }
+                    CStream.Close();
+                    NewFStream.Close();
+                    FStream.Close();
+                    File.Delete(strFile);
+                    MessageBox.Show("암호화 성공！", "신속한", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
-                catch
-                {
+                catch { 
+
                 }
             }
-            CStream.Close();
-            NewFStream.Close();
-            FStream.Close();
-            File.Delete(strFile);
-            MessageBox.Show("암호화 성공！", "신속한", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            
+            catch { }
         }
 
         //문서 복호화
         private void myDThread()
         {
-            
+            FileStream FStream = null;
+            FileStream NewFStream = null;
+            CryptoStream CStream = null;
+            try
+            {
+                try
+                {
+                    byte[] btRKey = new byte[0];
+                    int pwdLength = strPwd.Length;
+                    if (pwdLength == 6)
+                    {
+                        btRKey = new byte[] { (byte)strPwd[0], (byte)strPwd[1], (byte)strPwd[2], (byte)strPwd[3], (byte)strPwd[4], (byte)strPwd[5], (byte)strPwd[0], (byte)strPwd[1] };
+                    }
+                    if (pwdLength == 7)
+                    {
+                        btRKey = new byte[] { (byte)strPwd[0], (byte)strPwd[1], (byte)strPwd[2], (byte)strPwd[3], (byte)strPwd[4], (byte)strPwd[5], (byte)strPwd[6], (byte)strPwd[0] };
+                    }
+                    if (pwdLength == 8)
+                    {
+                        btRKey = new byte[] { (byte)strPwd[0], (byte)strPwd[1], (byte)strPwd[2], (byte)strPwd[3], (byte)strPwd[4], (byte)strPwd[5], (byte)strPwd[6], (byte)strPwd[7] };
+                    }
+                    FStream = new FileStream(strFile, FileMode.Open, FileAccess.Read);
+                    strNewFile = strFile.Substring(0, strFile.Length - 3);
+                    NewFStream = new FileStream(strNewFile, FileMode.OpenOrCreate, FileAccess.Write);
+                    NewFStream.SetLength((long)0);
+                    byte[] buffer = new byte[0x400];
+                    int MinNum = 0;
+                    long length = FStream.Length;
+                    int MaxNum = (int)(length / ((long)0x400));
+                    PBar.Maximum = MaxNum;
+                    DES myDES = new DESCryptoServiceProvider();
+                    CStream = new CryptoStream(NewFStream, myDES.CreateDecryptor(btRKey, btRKey), CryptoStreamMode.Write);
+                    while (MinNum < length)
+                    {
+                        int count = FStream.Read(buffer, 0, 0x400);
+                        CStream.Write(buffer, 0, count);
+                        MinNum += count;
+                        try
+                        {
+                            if (PBar.Value < PBar.Maximum)
+                            {
+                                PBar.Value++;
+                            }
+                        }
+                        catch
+                        {
+                        }
+                    }
+                    MessageBox.Show("파일 복호화 성공！", "신속한", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+                catch
+                {
+                    MessageBox.Show("파일 복호화 실패！", "실패", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+            finally
+            {
+                CStream.Close();
+                FStream.Close();
+                NewFStream.Close();
+            }
         }
 
         //암호화 스레드 실행
@@ -215,5 +302,4 @@ namespace EncryptDocuments
         }
     }
     #endregion
-
 }

@@ -8,3 +8,13 @@ D:\KW-OSS\KW-OSS-project\EncryptDocuments\obj\Debug\EncryptDocuments.csproj.Gene
 D:\KW-OSS\KW-OSS-project\EncryptDocuments\obj\Debug\EncryptDocuments.csproj.CoreCompileInputs.cache
 D:\KW-OSS\KW-OSS-project\EncryptDocuments\obj\Debug\EncryptDocuments.exe
 D:\KW-OSS\KW-OSS-project\EncryptDocuments\obj\Debug\EncryptDocuments.pdb
+D:\KW-OSS\KW-OSS-project\KW-OSS-project\EncryptDocuments\bin\Debug\EncryptDocuments.exe.config
+D:\KW-OSS\KW-OSS-project\KW-OSS-project\EncryptDocuments\bin\Debug\EncryptDocuments.exe
+D:\KW-OSS\KW-OSS-project\KW-OSS-project\EncryptDocuments\bin\Debug\EncryptDocuments.pdb
+D:\KW-OSS\KW-OSS-project\KW-OSS-project\EncryptDocuments\obj\Debug\EncryptDocuments.Form1.resources
+D:\KW-OSS\KW-OSS-project\KW-OSS-project\EncryptDocuments\obj\Debug\EncryptDocuments.Properties.Resources.resources
+D:\KW-OSS\KW-OSS-project\KW-OSS-project\EncryptDocuments\obj\Debug\EncryptDocuments.csproj.GenerateResource.cache
+D:\KW-OSS\KW-OSS-project\KW-OSS-project\EncryptDocuments\obj\Debug\EncryptDocuments.csproj.CoreCompileInputs.cache
+D:\KW-OSS\KW-OSS-project\KW-OSS-project\EncryptDocuments\obj\Debug\EncryptDocuments.exe
+D:\KW-OSS\KW-OSS-project\KW-OSS-project\EncryptDocuments\obj\Debug\EncryptDocuments.pdb
+D:\KW-OSS\KW-OSS-project\KW-OSS-project\EncryptDocuments\obj\Debug\EncryptDocuments.csprojAssemblyReference.cache
